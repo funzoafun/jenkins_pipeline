@@ -18,6 +18,14 @@ pipeline {
     }
 
     stages {
+        stage('Review node and npm installations') {
+            steps {
+                nodejs(nodeJSInstallationName: 'node20') {
+                sh 'npm -v'  //substitute with your code
+                sh 'node -v'
+                }
+            }
+        }
         stage('Install Dependencies') {
             steps {
                 script {

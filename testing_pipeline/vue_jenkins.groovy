@@ -3,7 +3,7 @@ pipeline {
 
     tools {
         // Use NodeJS installation named "NodeJS_14" (adjust as needed)
-        nodejs "NodeJS_14"
+        node "NodeJS_14"
     }
 
     environment {

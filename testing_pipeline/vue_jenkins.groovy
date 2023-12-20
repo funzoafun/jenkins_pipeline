@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-    tools {
-        // Use NodeJS installation named "NodeJS_14" (adjust as needed)
-        NodeJS "NodeJS"
-    }
-
     environment {
         // Adjust these environment variables as needed
         SONARQUBE_URL = "http://your-sonarqube-server:9000"

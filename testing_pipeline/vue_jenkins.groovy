@@ -1,10 +1,9 @@
 pipeline {
     agent any
 
-    environment {
-        // Adjust these environment variables as needed
-        SONARQUBE_URL = "http://your-sonarqube-server:9000"
-        SONARQUBE_TOKEN = credentials('sonar-token-id')
+     environment {
+        SONARQUBE_URL = "http://localhost:9001"
+        SONARQUBE_TOKEN = "sqp_a6d48813f639cd7c65ebcd8b193676593420a51b"
     }
 
     triggers {

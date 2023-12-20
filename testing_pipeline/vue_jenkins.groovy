@@ -1,35 +1,58 @@
-pipeline{
-    agent{
-        node{
-            label 'docker-agent-python'
-        }
+pipeline {
+    agent any
+
+    tools {
+        // Use NodeJS installation named "NodeJS_14" (adjust as needed)
+        nodejs "NodeJS_14"
     }
-    triggers{
-        pollSCM '*/1 * * * *'
+
+    environment {
+        // Adjust these environment variables as needed
+        SONARQUBE_URL = "http://your-sonarqube-server:9000"
+        SONARQUBE_TOKEN = credentials('sonar-token-id')
     }
-    stages{
-        stage('Build'){
-            steps{
-                echo "Building.."
-                sh '''
-                echo "doing build stuff.."
-                '''
+
+    triggers {
+        // Run the pipeline when changes are pushed to the specified Git repository
+        pollSCM('*/5 * * * *') // Poll every 5 minutes, adjust the schedule as needed
+    }
+
+    stages {
+        stage('Install Dependencies') {
+            steps {
+                script {
+                    // Install project dependencies
+                    sh 'npm install'
+                }
             }
         }
-        stage('Test'){
-            steps{
-                echo "Testing.."
-                sh '''
-                echo "doing testing stuff.."
-                '''
+
+        stage('Run Cypress Tests') {
+            steps {
+                script {
+                    // Run Cypress tests
+                    sh 'npx cypress run'
+                }
             }
         }
-        stage('Deliver'){
-            steps{
-                echo "Deliver.."
-                sh '''
-                echo "doing delivery stuff.."
-                '''
+
+        stage('Run Istanbul for Code Coverage') {
+            steps {
+                script {
+                    // Run Istanbul for code coverage
+                    sh 'npx nyc --reporter=lcov --reporter=text-summary npm run test'
+                }
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    // Run SonarQube analysis
+                    withSonarQubeEnv('SonarQube') {
+                        sh "npm run sonar-scanner -Dsonar.host.url=${env.SONARQUBE_URL} -Dsonar.login=${env.SONARQUBE_TOKEN}"
+                    }
+                }
             }
         }
     }

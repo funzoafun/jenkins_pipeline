@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent {label 'docker-agent-node'}
 
      environment {
         SONARQUBE_URL = "http://localhost:9001"
